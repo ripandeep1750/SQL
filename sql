@@ -25,3 +25,29 @@ ORDER BY Country, CustomerName;                 # First order by country; if sam
 
 SELECT * FROM Customers
 ORDER BY Country ASC, CustomerName DESC;
+
+# AND :- to filter the records based on more than one condition-------------------------------------------------------
+# All the conditions must be true
+SELECT * FROM Customers
+WHERE Country = 'Spain' AND CustomerName LIKE 'G%';
+
+# OR :- ANY of the condition must be true -----------------------------------------------------------------------------
+SELECT * FROM Customers
+WHERE Country = 'Spain' OR Country = 'Germany';
+
+SELECT * FROM Customers
+WHERE Country = 'Spain' AND CustomerName LIKE 'G%' OR CustomerName LIKE 'R%';
+
+# NOT :- combined with other operators to give opposite results--------------------------------------------------------
+SELECT * FROM Customers
+WHERE NOT Country = 'Spain';
+
+SELECT * FROM Customers
+WHERE CustomerID NOT BETWEEN 10 AND 60;
+
+SELECT * FROM Customers
+WHERE City NOT IN ('Paris', 'London');
+
+# INSERT INTO :- insert new records in a table------------------------------------------------------------------------
+
+# OR :- 
