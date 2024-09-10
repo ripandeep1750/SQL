@@ -49,5 +49,19 @@ SELECT * FROM Customers
 WHERE City NOT IN ('Paris', 'London');
 
 # INSERT INTO :- insert new records in a table------------------------------------------------------------------------
+INSERT INTO Customers (CustomerName, City, Country)
+VALUES ('Cardinal', 'Stavanger', 'Norway');
 
-# OR :- 
+# NULL :- A field with a NULL value is a field with no value.------------------------------------------------------------------
+SELECT CustomerName, ContactName, Address
+FROM Customers
+WHERE Address IS NULL;
+
+SELECT CustomerName, ContactName, Address
+FROM Customers
+WHERE Address IS NOT NULL;
+
+# UPDATE :- used to modify the existing record in a table.--------------------------------------------------------
+UPDATE Customers
+SET ContactName = 'Alfred Schmidt', City= 'Frankfurt'
+WHERE CustomerID = 1;  # If you omit the WHERE clause, ALL records will be updated!
