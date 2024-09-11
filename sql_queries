@@ -65,3 +65,28 @@ WHERE Address IS NOT NULL;
 UPDATE Customers
 SET ContactName = 'Alfred Schmidt', City= 'Frankfurt'
 WHERE CustomerID = 1;  # If you omit the WHERE clause, ALL records will be updated!
+
+# DELETE :- to delete existing records in a table.---------------------------------------------------------------
+DELETE FROM Customers 
+WHERE CustomerName='Alfreds Futterkiste';  # If you omit the WHERE clause, all records in the table will be deleted!
+
+# To delete all rows , table structure, attributes, and indexes will be intact
+DELETE FROM Customers; 
+
+# To delete the table completely
+DROP TABLE Customers;
+
+# SELECT TOP :- specify the number of recirds to return------------------------------------------------------------
+SELECT TOP 3 * FROM Customers;   # For SQL server/ MS Access
+
+SELECT * FROM Customers
+LIMIT 3;              # For MySQL 
+
+SELECT * FROM Customers
+FETCH FIRST 3 ROWS ONLY;       # For Oracle
+
+SELECT TOP 50 PERCENT * FROM Customers;   # For SQL sever/ MS access
+
+SELECT * FROM Customers
+FETCH FIRST 50 PERCENT ROWS ONLY;   # For Oracle
+
