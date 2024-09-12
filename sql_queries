@@ -76,7 +76,7 @@ DELETE FROM Customers;
 # To delete the table completely
 DROP TABLE Customers;
 
-# SELECT TOP :- specify the number of recirds to return------------------------------------------------------------
+# SELECT TOP :- specify the number of records to return------------------------------------------------------------
 SELECT TOP 3 * FROM Customers;   # For SQL server/ MS Access
 
 SELECT * FROM Customers
@@ -90,3 +90,20 @@ SELECT TOP 50 PERCENT * FROM Customers;   # For SQL sever/ MS access
 SELECT * FROM Customers
 FETCH FIRST 50 PERCENT ROWS ONLY;   # For Oracle
 
+# Aggregate functions :- performs a calculation on a set of values, and returns a single value. EG:- MIN(), MAX(), COUNT(), SUM(), AVG()-----------------
+
+# MIN() :- returns the smallest value of the selected column.-----------------------------------------------------------
+SELECT MIN(Price)
+FROM Products;
+
+# MAX() :- returns the largest value of the selected column.-----------------------------------------------------------------
+SELECT MAX(Price)
+FROM Products;
+
+# COUNT() :- returns the number of rows that matches a specified criterion.----------------------------------------------------
+SELECT COUNT(*)
+FROM Products;
+
+# SUM() :- returns the total sum of a numeric column.-----------------------------------------------------------------------
+SELECT SUM(Quantity)
+FROM OrderDetails;
