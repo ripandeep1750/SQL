@@ -172,3 +172,26 @@ ORDER BY ProductName;
 
 SELECT * FROM Orders
 WHERE OrderDate BETWEEN #07/01/1996# AND #07/31/1996#;
+
+# Alias :- used to give a table, or a column in a table, a temporary name.---------------------------------------------------
+SELECT CustomerID AS ID, CustomerName AS Customer
+FROM Customers;
+
+# To name a column
+SELECT ProductName AS [My Great Products]
+FROM Products;
+
+#To name a column
+SELECT CustomerName, Address + ', ' + PostalCode + ' ' + City + ', ' + Country AS Address
+FROM Customers;
+
+# To name a table
+SELECT * FROM Customers AS Persons;
+
+# Join :- used to combine rows from two or more tables, based on a related column between them.--------------------------------
+(INNER) JOIN: Returns records that have matching values in both tables
+LEFT (OUTER) JOIN: Returns all records from the left table, and the matched records from the right table
+RIGHT (OUTER) JOIN: Returns all records from the right table, and the matched records from the left table
+FULL (OUTER) JOIN: Returns all records when there is a match in either left or right table.
+
+# Inner Join:- 
