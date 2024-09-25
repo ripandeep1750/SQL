@@ -1,4 +1,4 @@
-# SELECT :- To extraxt data from database---------------------------------------------------------------------------
+# SELECT :- To extract data from database---------------------------------------------------------------------------
 SELECT CustomerName, City FROM Customers;
 
 #* :- To return all columns-----------------------------------------------------------------------------------------
@@ -194,4 +194,65 @@ LEFT (OUTER) JOIN: Returns all records from the left table, and the matched reco
 RIGHT (OUTER) JOIN: Returns all records from the right table, and the matched records from the left table
 FULL (OUTER) JOIN: Returns all records when there is a match in either left or right table.
 
-# Inner Join:- 
+# Inner Join:------------------------------------------------------------------------------------------------------------------- 
+#IN CASE OF TWO TABLES:-
+SELECT ProductID, ProductName, CategoryName
+FROM Products
+INNER JOIN Categories ON Products.CategoryID = Categories.CategoryID;
+
+# IN CASE OF THREE TABLES:-
+SELECT Orders.OrderID, Customers.CustomerName, Shippers.ShipperName
+FROM ((Orders
+INNER JOIN Customers ON Orders.CustomerID = Customers.CustomerID)
+INNER JOIN Shippers ON Orders.ShipperID = Shippers.ShipperID);
+
+# Left Join :-----------------------------------------------------------------------------------------------------------------
+SELECT Customers.CustomerName, Orders.OrderID
+FROM Customers
+LEFT JOIN Orders ON Customers.CustomerID = Orders.CustomerID
+ORDER BY Customers.CustomerName;
+
+# Right Join:-----------------------------------------------------------------------------------------------------------------
+SELECT Orders.OrderID, Employees.LastName, Employees.FirstName
+FROM Orders
+RIGHT JOIN Employees ON Orders.EmployeeID = Employees.EmployeeID
+ORDER BY Orders.OrderID;
+
+# Full Outer Join:-----------------------------------------------------------------------------------------------------------
+SELECT Customers.CustomerName, Orders.OrderID
+FROM Customers
+FULL OUTER JOIN Orders ON Customers.CustomerID=Orders.CustomerID
+ORDER BY Customers.CustomerName;
+
+# Self Join ----------------------------------------------------------------------------------------------------------------
+SELECT A.CustomerName AS CustomerName1, B.CustomerName AS CustomerName2, A.City
+FROM Customers A, Customers B       # Same table different aliases
+WHERE A.CustomerID <> B.CustomerID  # Not equal to
+AND A.City = B.City
+ORDER BY A.City;
+
+# Union :- used to combine the result-set of two or more SELECT statements---------------------------------------------------
+(1) Every SELECT statement within UNION must have the same number of columns
+(2) The columns must also have similar data types
+(3) The columns in every SELECT statement must also be in the same order
+NOTE:- UNION selects distinct values by default, UNION ALL selects duplicates.
+SELECT City FROM Customers
+UNION
+SELECT City FROM Suppliers
+ORDER BY City;
+
+# Group By :- groups rows that have the same values into summary rows, like "find the number of customers in each country"----
+It is often used with aggregate functions (COUNT(), MAX(), MIN(), SUM(), AVG()) to group the result-set by one or more columns.
+SELECT COUNT(CustomerID), Country
+FROM Customers
+GROUP BY Country;
+
+# Having :- because the WHERE keyword cannot be used with aggregate functions.------------------------------------------------
+SELECT COUNT(CustomerID), Country
+FROM Customers
+GROUP BY Country
+HAVING COUNT(CustomerID) > 5
+ORDER BY COUNT(CustomerID) DESC;
+
+# Exists :- used to test for the existence of any record in a subquery.------------------------------------------------------
+It returns TRUE if the subquery returns one or more records.
