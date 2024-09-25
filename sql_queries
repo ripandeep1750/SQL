@@ -1,7 +1,7 @@
 # SELECT :- To extract data from database---------------------------------------------------------------------------
 SELECT CustomerName, City FROM Customers;
 
-#* :- To return all columns-----------------------------------------------------------------------------------------
+# * :- To return all columns-----------------------------------------------------------------------------------------
 SELECT * FROM Customers;
 
 # SELECT DISTINCT :- to return only distinct (different) values-----------------------------------------------------
