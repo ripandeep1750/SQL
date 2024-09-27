@@ -111,6 +111,169 @@ CREATE TABLE Persons (
 -> there is only ONE PRIMARY KEY (PK_Person). However, the VALUE of the primary key is made up of TWO COLUMNS (ID + LastName).
 
 (4) FOREIGN KEY - Prevents actions that would destroy links between tables.
-(5) CHECK - Ensures that the values in a column satisfies a specific condition
-(6) DEFAULT - Sets a default value for a column if no value is specified
+-> A FOREIGN KEY is a field (or collection of fields) in one table, that refers to the PRIMARY KEY in another table.
+-> The table with the foreign key is called the child table, and the table with the primary key is called the referenced or parent table.
+CREATE TABLE Orders (
+    OrderID int NOT NULL,
+    OrderNumber int NOT NULL,
+    PersonID int,
+    PRIMARY KEY (OrderID),
+    FOREIGN KEY (PersonID) REFERENCES Persons(PersonID)
+);
+
+# Foreign key constraint on multiple columns
+CREATE TABLE Orders (
+    OrderID int NOT NULL,
+    OrderNumber int NOT NULL,
+    PersonID int,
+    PRIMARY KEY (OrderID),
+    CONSTRAINT FK_PersonOrder FOREIGN KEY (PersonID)
+    REFERENCES Persons(PersonID)
+);
+
+(5) CHECK - Ensures that the values in a column satisfies a specific condition.
+CREATE TABLE Persons (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    CHECK (Age>=18)
+);
+
+# Check constraint on multiple columns 
+CREATE TABLE Persons (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    City varchar(255),
+    CONSTRAINT CHK_Person CHECK (Age>=18 AND City='Sandnes')
+);
+
+(6) DEFAULT - Sets a default value for a column if no value is specified.
+CREATE TABLE Persons (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    City varchar(255) DEFAULT 'Sandnes'
+);
+
 (7) CREATE INDEX - Used to create and retrieve data from the database very quickly.
+-> used to create indexes in tables.
+CREATE INDEX idx_lastname
+ON Persons (LastName);
+
+# Create index on a combination of columns
+CREATE INDEX idx_pname
+ON Persons (LastName, FirstName);
+
+# AUTO INCREMENT ---------------------------------------------------------------------------------------------------------------
+-> Auto-increment allows a unique number to be generated automatically when a new record is inserted into a table.
+-> Often this is the primary key field that we would like to be created automatically every time a new record is inserted.
+CREATE TABLE Persons (
+    Personid int NOT NULL AUTO_INCREMENT,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    PRIMARY KEY (Personid)
+);
+
+# DATES -----------------------------------------------------------------------------------------------------------------------
+# Different formats :- 
+DATE - format YYYY-MM-DD
+DATETIME - format: YYYY-MM-DD HH:MI:SS
+TIMESTAMP - format: YYYY-MM-DD HH:MI:SS
+YEAR - format YYYY or YY
+SELECT * FROM Orders WHERE OrderDate='2008-11-11'
+
+# VIEWS ----------------------------------------------------------------------------------------------------------------------
+-> a view is a virtual table based on the result-set of an SQL statement.
+CREATE VIEW [Brazil Customers] AS
+SELECT CustomerName, ContactName
+FROM Customers
+WHERE Country = 'Brazil';
+
+SELECT * FROM [Brazil Customers];  # To query the above view
+
+# To update a view
+CREATE OR REPLACE VIEW [Brazil Customers] AS    # Adds a city column
+SELECT CustomerName, ContactName, City
+FROM Customers
+WHERE Country = 'Brazil';   
+
+# Dropping a view
+DROP VIEW [Brazil Customers];
+
+# INJECTION --------------------------------------------------------------------------------------------------------------------
+-> It is a code injection technique that might destroy your database.
+-> It is one of the most common web hacking techniques.
+-> It is the placement of malicious code in SQL statements, via web page input.
+-> SQL injection usually occurs when you ask a user for input, like their username/userid, and instead of a name/id, the user
+gives you an SQL statement that you will unknowingly run on your database.
+
+# Following example creates a SELECT statement by adding a variable (txtUserId) to a select string. The variable is 
+fetched from user input (getRequestString)
+txtUserId = getRequestString("UserId");
+txtSQL = "SELECT * FROM Users WHERE UserId = " + txtUserId;
+
+# INJECTION BASED ON 1=1 IS ALWAYS TRUE
+The original purpose of the code above was to create an SQL statement to select a user, with a given user id.
+If there is nothing to prevent a user from entering "wrong" input, the user can enter some "smart" input like 105 or 1=1.
+The SQL above is valid and will return ALL rows from the "Users" table, since OR 1=1 is always TRUE.
+
+# INJECTION BASED ON ""="" IS ALWAYS TRUE
+uName = getRequestString("username");
+uPass = getRequestString("userpassword");
+sql = 'SELECT * FROM Users WHERE Name ="' + uName + '" AND Pass ="' + uPass + '"'
+
+SELECT * FROM Users WHERE Name ="John Doe" AND Pass ="myPass"
+SELECT * FROM Users WHERE Name ="" or ""="" AND Pass ="" or ""="" # Will give access to everything, since statement is valid
+
+# INJECTION BASED ON BATCHED SQL STATEMENTS
+-> A batch of SQL statements is a group of two or more SQL statements, separated by semicolons.
+SELECT * FROM Users; DROP TABLE Suppliers
+
+txtUserId = getRequestString("UserId");
+txtSQL = "SELECT * FROM Users WHERE UserId = " + txtUserId;
+
+SELECT * FROM Users WHERE UserId = 105; DROP TABLE Suppliers;
+
+# USE SQL PARAMETERS FOR PROTECTION
+-> SQL parameters are values that are added to an SQL query at execution time, in a controlled manner.
+
+ASP.NET RAZOR EXAMPLE :-
+txtUserId = getRequestString("UserId");
+txtSQL = "SELECT * FROM Users WHERE UserId = @0";    # parameters are represented in the SQL statement by a @ marker.
+db.Execute(txtSQL,txtUserId);
+-> The SQL engine checks each parameter to ensure that it is correct for its column and are treated literally, and not as part of
+the SQL to be executed.
+
+# HOSTING ---------------------------------------------------------------------------------------------------------------------
+-> SQL Hosting: Refers to the use of servers to host and manage SQL databases, enabling access over the internet or a network.
+-> Cloud Hosting: Providers like AWS, Azure, and Google Cloud offer managed SQL hosting with automatic backups, scaling, and 
+security.
+-> On-Premises Hosting: SQL databases are hosted on local servers managed by in-house IT teams.
+-> Types of Databases: Supports relational databases (SQL Server, MySQL, PostgreSQL) and cloud-based solutions (Azure SQL, 
+Amazon RDS).
+-> Advantages: Scalability, high availability, disaster recovery, and automatic updates in cloud hosting.
+-> Access: Databases can be accessed remotely via SQL tools (SSMS, pgAdmin) or through APIs and applications.
+
+# DATA TYPES -------------------------------------------------------------------------------------------------------------------
+(1) Numeric Data Types:
+-> INT: Whole numbers (e.g., 5, 100).
+-> FLOAT / REAL: Approximate floating-point numbers (e.g., 5.67).
+-> DECIMAL / NUMERIC: Fixed-point numbers for precise values (e.g., 10.25).
+(2) Character Data Types:
+-> CHAR(n): Fixed-length string (e.g., CHAR(10) allocates space for 10 characters).
+-> VARCHAR(n): Variable-length string (e.g., VARCHAR(50) allocates up to 50 characters).
+(3) Date and Time Data Types:
+-> DATE: Stores date values (e.g., 2023-09-12).
+-> TIME: Stores time values (e.g., 12:30:00).
+-> DATETIME / TIMESTAMP: Stores both date and time values (e.g., 2024-01-01 12:00:00).
+(4) Binary Data Types:
+-> BINARY / VARBINARY: Stores binary data like images, audio, or video (e.g., VARBINARY(500)).
+(5) Other Data Types:
+-> BOOLEAN: Stores TRUE or FALSE.
+-> TEXT: Stores large strings or unstructured data.
+-> BLOB: Binary Large Object, used to store large binary data like files.
