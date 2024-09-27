@@ -4,4 +4,113 @@ CREATE DATABASE testDB;
 # DROP DATABASE -------------------------------------------------------------------------------------------
 DROP DATABASE testDB;
 
-# 
+# BACKUP DATABASE -----------------------------------------------------------------------------------------
+BACKUP DATABASE testDB
+TO DISK = 'D:\backups\testDB.bak';
+
+# BACKUP WITH DIFFERENTIAL :- only backs up the parts of the database that have changed since the last full database backup.
+BACKUP DATABASE testDB
+TO DISK = 'D:\backups\testDB.bak'
+WITH DIFFERENTIAL;
+
+# CREATE TABLE ---------------------------------------------------------------------------------------------
+CREATE TABLE Persons (
+    PersonID int,
+    LastName varchar(255),
+    FirstName varchar(255),
+    Address varchar(255),
+    City varchar(255)
+);
+
+# Create tabe usinf another table 
+CREATE TABLE TestTable AS
+SELECT customername, contactname
+FROM customers;
+
+# DROP TABLE -------------------------------------------------------------------------------------------------
+DROP TABLE Shippers;   # result in loss of complete information
+
+# TRUNCATE TABLE :- delete the data inside a table, but not the table itself ---------------------------------
+TRUNCATE TABLE table_name;
+
+# ALTER TABLE :- to add, delete, or modify columns in an existing table -------------------------------------
+# ALTER TABLE - ADD COLUMN
+ALTER TABLE Customers
+ADD Email varchar(255);
+
+# ALTER TABLE - DROP COLUMN
+ALTER TABLE Customers
+DROP COLUMN Email;
+
+# ALTER TABLE - RENAME COLUMN
+ALTER TABLE table_name
+RENAME COLUMN old_name to new_name;
+# To run in sql server
+EXEC sp_rename 'table_name.old_name',  'new_name', 'COLUMN';
+
+# ALTER TABLE - ALTER/MODIFY DATATYPE
+ALTER TABLE table_name
+ALTER COLUMN column_name datatype;
+
+ALTER TABLE Persons
+ALTER COLUMN DateOfBirth year;
+
+# CONSTRAINTS :- used to specify rules for data in a table --------------------------------------------------------------------
+-> used to limit the type of data that can go into a table.
+- Constraints can be column level or table level.
+CREATE TABLE table_name (
+    column1 datatype constraint,
+    column2 datatype constraint,
+    column3 datatype constraint,
+    ....
+);
+
+The following constraints are commonly used in SQL:
+(1) NOT NULL - Ensures that a column cannot have a NULL value
+CREATE TABLE Persons (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255) NOT NULL,
+    Age int
+);
+
+(2) UNIQUE - Ensures that all values in a column are different.
+CREATE TABLE Persons (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    UNIQUE (ID)
+);
+# For multiple columns
+CREATE TABLE Persons (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    CONSTRAINT UC_Person UNIQUE (ID,LastName)
+);
+
+(3) PRIMARY KEY - A combination of a NOT NULL and UNIQUE. Uniquely identifies each row in a table.
+-> A table can have only ONE primary key; and in the table, this primary key can consist of single or multiple columns (fields).
+CREATE TABLE Persons (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    PRIMARY KEY (ID)
+);
+
+CREATE TABLE Persons (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    CONSTRAINT PK_Person PRIMARY KEY (ID,LastName)
+);
+-> there is only ONE PRIMARY KEY (PK_Person). However, the VALUE of the primary key is made up of TWO COLUMNS (ID + LastName).
+
+(4) FOREIGN KEY - Prevents actions that would destroy links between tables.
+(5) CHECK - Ensures that the values in a column satisfies a specific condition
+(6) DEFAULT - Sets a default value for a column if no value is specified
+(7) CREATE INDEX - Used to create and retrieve data from the database very quickly.
